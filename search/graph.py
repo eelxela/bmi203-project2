@@ -17,6 +17,9 @@ class Graph:
         self.graph = nx.read_adjlist(filename, create_using=nx.DiGraph, delimiter=";")
         self.nodes = self.graph.nodes
 
+    def _pick_shortest(self, path):
+        return [el[0] for el in path]
+
     def get_shortest_path(self, in_adj_map: dict, start: str, end: str):
         """[summary]
 
@@ -29,7 +32,13 @@ class Graph:
             [type]: [description]
         """
 
-        shortest_path = [end]
+        shortest_path = [[end]] + [
+            in_adj_map[end].copy()
+        ]  # also prevent from being popped out
+
+        if start in in_adj_map[end]:
+            return [start] + shortest_path[0]
+
         seen = set()
         neighbors = in_adj_map[
             end
@@ -40,8 +49,7 @@ class Graph:
             children = in_adj_map[node]
 
             neighbors.extend(children)
-
-            shortest_path.append(children[0])
+            shortest_path.append(children)
 
             if start in children:
                 break
@@ -111,6 +119,7 @@ class Graph:
             if (end is not None) and (end in seen):
                 finished = True
 
+        self.mat = in_deg_adjacency
         if end is None:
             return seen
         elif (end is not None) and (finished is True):
