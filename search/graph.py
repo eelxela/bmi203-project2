@@ -29,7 +29,7 @@ class Graph:
             [type]: [description]
         """
 
-        shortest_path = [[end]]
+        shortest_path = [end]
         seen = set()
         neighbors = in_adj_map[
             end
@@ -41,10 +41,7 @@ class Graph:
 
             neighbors.extend(children)
 
-            if len(children) == 1:
-                shortest_path.append(children)
-            else:
-                shortest_path.append(children)
+            shortest_path.append(children[0])
 
             if start in children:
                 break
