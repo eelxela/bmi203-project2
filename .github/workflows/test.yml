@@ -6,7 +6,9 @@ name: project2
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
   push:
-    branches: [ main ]
+    branches:
+      - master
+      - main
 
   workflow_dispatch:
 
@@ -22,12 +24,11 @@ jobs:
       - name: Install Python 3
         uses: actions/setup-python@v1
         with:
-          python-version: 3.6 
+          python-version: 3.7
       
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-      
       - name: Run unit tests
-        run: python -m pytest -v test/*
+        run: python -m pytest -vv test/*
