@@ -18,6 +18,15 @@ class Graph:
         self.nodes = self.graph.nodes
 
     def _pick_shortest(self, path):
+        """[summary]
+
+        Args:
+            path ([type]): [description]
+
+        Returns:
+            [type]: [description]
+        """
+
         return [el[0] for el in path]
 
     def get_shortest_path(self, in_adj_map: dict, start: str, end: str):
@@ -39,7 +48,6 @@ class Graph:
         if start in in_adj_map[end]:
             return [start] + shortest_path[0]
 
-        seen = set()
         neighbors = in_adj_map[
             end
         ].copy()  # needed so we don't modify the original list in in_adj_map
