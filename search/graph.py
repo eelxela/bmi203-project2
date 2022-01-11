@@ -119,6 +119,9 @@ class Graph:
         if not (end is None or isinstance(end, str)):
             raise TypeError('Argument "end" must be of a string or "None".')
 
+        if end is not None and end not in self.nodes:
+            raise ValueError(f"Node {end} not found in graph found at {self.filename}")
+
         if start not in self.nodes:
             raise ValueError(
                 f"Provided node name: {start} not a valid node in the graph found at {self.filename}"
@@ -127,6 +130,9 @@ class Graph:
             raise ValueError(
                 f"Provided node name: {end} not a valid node in the graph found at {self.filename}"
             )
+
+        if (end is not None) and (start == end):
+            return [start]
 
         # initialize seen
         seen = [start]

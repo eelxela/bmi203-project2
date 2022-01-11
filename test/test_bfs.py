@@ -119,3 +119,9 @@ def test_bfs(big_graph):
         for unconnected_node in unconnected_nodes:
             bfs = big_graph.bfs(start=node, end=unconnected_node)
             assert bfs is None
+
+    assert big_graph.bfs("Martin Kampmann", "Martin Kampmann") == ["Martin Kampmann"]
+    
+    with pytest.raises(ValueError):
+        big_graph.bfs("Somebody")
+        big_graph.bfs("Martin Kampmann", "Nobody")
