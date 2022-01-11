@@ -110,7 +110,7 @@ def test_bfs(big_graph):
         for connected_node in connected_nodes:
             bfs = big_graph.bfs(start=node, end=connected_node)
             # fmt: off
-            check = ((bfs is not None) and len(bfs) > 1)
+            check = ((bfs is not None) and len(bfs) > 1) # black formatter wants to elide this into one check
             assert check
             # fmt: on
 
