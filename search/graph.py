@@ -19,36 +19,39 @@ class Graph:
         self.nodes = self.graph.nodes
 
     def _pick_shortest(self, path: List[list]) -> List[str]:
-        """[summary]
+        """
+        Flattens a list of lists into a list of strings that represents a shortest path.
+        In the get_shortest_path fn we return a list of lists to allow for cycles such as (a-->b, a-->c, b-->d, c-->d)
+        We will just flatten this list and select the first entry of each one so that we get a flat list of strings.
 
         Args:
-            path ([type]): [description]
+            path (list of lists): List of lists, where each list has a node or multiple nodes.
 
         Returns:
-            [type]: [description]
+            List of strings representing shortest path.
         """
 
         return [el[0] for el in path]
 
     def get_shortest_path(self, in_adj_map: dict, start: str, end: str) -> List[str]:
         """
-        From a dictionary where the key: val pairs are nodes [key] and their parent nodes [vals], construct shortest path from start to end
+        From a dictionary where the key: val pairs are nodes [key] and their parent nodes [vals], construct shortest path from start to end.
 
         Args:
-            in_adj_map (dict): Dict of key: val pairs. Nodes are keys and parent nodes are values
+            in_adj_map (dict): Dict of key: val pairs. Nodes are keys and parent nodes are values.
             start (str): Start node.
             end (str): End node.
 
         Returns:
             List of lists. The reason we return a list of lists is because we maintain cycles (ie if a-->b, a-->c, b-->d, c-->d).
-            Then the return would be [[a], [b, c], [d]]
+            Then the return would be [[a], [b, c], [d]].
             We then can use _pick_shortest to just flatten the list and select one of the cycle nodes (b in the previous example), if they are present.
         """
 
         # initialize shortest path with the end node and the parent of end node
         shortest_path = [[end]] + [
             in_adj_map[end].copy()
-        ]  # also prevent from being popped out
+        ]  # prevent from being popped out; since we are going to be popping elements out if we dont make a copy we'll be modifying our list values in place and weird things will happen
 
         if (
             start in in_adj_map[end]
@@ -77,7 +80,7 @@ class Graph:
 
         return self._pick_shortest(
             reversed(shortest_path)
-        )  # since we're going backwards through the list, we need to return it as a reversed list
+        )  # since we're going backwards through the list, we need to return it as a reversed list. see pick shortest for description of how we flatten this list of lists to a list of string
 
     def bfs(
         self,
@@ -89,6 +92,12 @@ class Graph:
         If end is provided, then the search will end at node end and the return value will be a list of nodes corresponding to the shortest path.
         If not, the output will be the BFS traversal node order as a list of nodes.
         If start and end are provided, but start and end nodes are not connected, the output will be 'None'.
+
+        A quick summary of the fn is that we are going to have a queue of nodes and a dictionary of node: node-neighbors pairs.
+        We loop over the node: node-neighbors dict and for new/unseen nodes we add them to queue.
+        Then for the nodes that entered queue, we make a new node: node-neighbors dict and we loop over that.
+        We also record the parents of each node in a dictionary, so that if the user prompted we could backtrack that parent-node and get the shortest path.
+        Eventually we will hit the end of the tree; and then we can return either the shortest path or the traversal.
 
         Args:
             start (str): Root node for the BFS.
