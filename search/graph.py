@@ -80,6 +80,12 @@ class Graph:
             [type]: [description]
         """
 
+        if isinstance(start, str) is False:
+            raise TypeError('Argument "start" must be a string.')
+
+        if not (end is None or isinstance(end, str)):
+            raise TypeError('Argument "end" must be of a string or "None".')
+
         if start not in self.nodes:
             raise ValueError(
                 f"Provided node name: {start} not a valid node in the graph found at {self.filename}"
@@ -89,14 +95,14 @@ class Graph:
                 f"Provided node name: {end} not a valid node in the graph found at {self.filename}"
             )
 
-        seen = []
+        seen = [start]
 
-        in_deg_adjacency = defaultdict(list)
+        parents = defaultdict(list)
 
         neighbors = {start: []}
         for neighbor in sorted(self.graph.neighbors(start)):
             neighbors[start].append(neighbor)
-            in_deg_adjacency[neighbor].append(start)
+            parents[neighbor].append(start)
 
         finished = False
 
@@ -104,10 +110,13 @@ class Graph:
             queue = []
             for top_node in neighbors.keys():
                 for top_node_neighbor in neighbors[top_node]:
-                    if top_node_neighbor not in seen:
+                    if (top_node_neighbor not in seen) and (
+                        top_node_neighbor not in queue
+                    ):
                         # print(top_node_neighbor)
                         queue.append(top_node_neighbor)
 
+            queue.sort()
             seen.extend(queue)
 
             neighbors = {}
@@ -115,11 +124,10 @@ class Graph:
                 node_neighbors = sorted(self.graph.neighbors(node))
                 neighbors[node] = node_neighbors
                 for child_node in node_neighbors:
-
-                    if (child_node in seen) or (node in in_deg_adjacency[child_node]):
+                    if (child_node in seen) or (node in parents[child_node]):
                         continue
 
-                    in_deg_adjacency[child_node].append(node)
+                    parents[child_node].append(node)
 
             if len(neighbors) == 0:
                 break
@@ -127,10 +135,11 @@ class Graph:
             if (end is not None) and (end in seen):
                 finished = True
 
-        self.mat = in_deg_adjacency
+        self.parents = parents
+
         if end is None:
             return seen
         elif (end is not None) and (finished is True):
-            return self.get_shortest_path(in_deg_adjacency, start, end)
+            return self._pick_shortest(self.get_shortest_path(parents, start, end))
         else:
             return None
