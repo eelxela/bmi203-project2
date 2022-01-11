@@ -1,4 +1,4 @@
- "![BuildStatus](https://github.com/eelxela/bmi203-project2/actions/workflows/test.yml/badge.svg)"
+ ![BuildStatus](https://github.com/eelxela/bmi203-project2/actions/workflows/test.yml/badge.svg)
 
 # Project 2
 Breadth-first search
