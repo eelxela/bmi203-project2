@@ -49,6 +49,17 @@ CONNECTED_NODES = {
     "Charles Chiu": ["34883951", "34912531", "34919578", "34945766", "34957251"],
 }
 
+ER_CONNECTS = ((0, 7, 4), (1, 5, 3), (4, 2, 3))
+ER_UNCONNECT = ((6, 0), (3, 5))
+
+
+@pytest.fixture
+def er_graph():
+    fname = (
+        pathlib.Path(__file__).resolve().parent.parent / "data" / "erdosrenyi.adjlist"
+    )
+    return graph.Graph(fname)
+
 
 @pytest.fixture
 def tiny_graph():
@@ -85,7 +96,7 @@ def test_bfs_traversal(tiny_graph):
     assert len(traversal) == len(tiny_graph.nodes)  # all nodes included
 
 
-def test_bfs(big_graph):
+def test_bfs(big_graph, er_graph):
     """
     TODO: Write your unit test for your breadth-first
     search here. You should generate an instance of a Graph
@@ -121,7 +132,17 @@ def test_bfs(big_graph):
             assert bfs is None
 
     assert big_graph.bfs("Martin Kampmann", "Martin Kampmann") == ["Martin Kampmann"]
-    
+
     with pytest.raises(ValueError):
         big_graph.bfs("Somebody")
         big_graph.bfs("Martin Kampmann", "Nobody")
+
+    # test mini erdos-renyi graph, see erdosrenyi.png for image
+    # path lengths found by inspection
+    for start, end, length in ER_CONNECTS:
+        path = er_graph.bfs(start=start, end=end)
+        assert length == len(path)
+
+    for start, end in ER_UNCONNECT:  # these nodes unconnected in ergraph.png
+        path = er_graph.bfs(start=start, end=end)
+        assert path is None
