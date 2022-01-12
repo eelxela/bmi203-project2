@@ -114,13 +114,10 @@ class Graph:
         """
 
         if isinstance(start, (int, str)) is False:
-            raise TypeError('Argument "start" must be a string.')
+            raise TypeError('Argument "start" must be a string or int.')
 
         if not (end is None or isinstance(end, (int, str))):
             raise TypeError('Argument "end" must be a string or "None".')
-
-        if end is not None and end not in self.nodes:
-            raise ValueError(f"Node {end} not found in graph found at {self.filename}")
 
         if start not in self.nodes:
             raise ValueError(
