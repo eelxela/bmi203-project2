@@ -49,14 +49,14 @@ CONNECTED_NODES = {
     "Charles Chiu": ["34883951", "34912531", "34919578", "34945766", "34957251"],
 }
 
-ER_CONNECTS = ((0, 7, 4), (1, 5, 3), (4, 2, 3))
-ER_UNCONNECT = ((6, 0), (3, 5))
+ER_CONNECTS = (("0", "7", 4), ("1", "5", 3), ("4", "5", 3))
+ER_UNCONNECT = (("6", "0"), ("3", "5"))
 
 
 @pytest.fixture
 def er_graph():
     fname = (
-        pathlib.Path(__file__).resolve().parent.parent / "data" / "erdosrenyi.adjlist"
+        pathlib.Path(__file__).resolve().parent.parent / "test" / "erdosrenyi.adjlist"
     )
     return graph.Graph(fname)
 
@@ -139,10 +139,10 @@ def test_bfs(big_graph, er_graph):
 
     # test mini erdos-renyi graph, see erdosrenyi.png for image
     # path lengths found by inspection
-    for start, end, length in ER_CONNECTS:
+    for (start, end, length) in ER_CONNECTS:
         path = er_graph.bfs(start=start, end=end)
         assert length == len(path)
 
-    for start, end in ER_UNCONNECT:  # these nodes unconnected in ergraph.png
+    for (start, end) in ER_UNCONNECT:  # these nodes unconnected in ergraph.png
         path = er_graph.bfs(start=start, end=end)
         assert path is None

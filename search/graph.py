@@ -84,7 +84,7 @@ class Graph:
 
     def bfs(
         self,
-        start: str,
+        start: Union[int, str],
         end: Optional[Union[str, None]] = None,
     ):
         """
@@ -113,10 +113,10 @@ class Graph:
             A traversal list of nodes if start is provided but not end.
         """
 
-        if isinstance(start, str) is False:
+        if isinstance(start, (int, str)) is False:
             raise TypeError('Argument "start" must be a string.')
 
-        if not (end is None or isinstance(end, str)):
+        if not (end is None or isinstance(end, (int, str))):
             raise TypeError('Argument "end" must be of a string or "None".')
 
         if end is not None and end not in self.nodes:

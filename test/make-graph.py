@@ -5,7 +5,7 @@ import pathlib
 
 folder = pathlib.Path(__file__).resolve().parent
 graph = random_graphs.erdos_renyi_graph(8, p=0.2, seed=100, directed=True)
-nx.write_adjlist(graph, folder / "erdosrenyi.adjlist")
+nx.write_adjlist(graph, folder / "erdosrenyi.adjlist", delimiter=";")
 
 # write graph picture
 options = {"node_color": "white", "edgecolors": "black", "linewidths": 2}
