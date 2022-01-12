@@ -133,9 +133,12 @@ def test_bfs(big_graph, er_graph):
 
     assert big_graph.bfs("Martin Kampmann", "Martin Kampmann") == ["Martin Kampmann"]
 
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match=r"*not found in graph*"):
         big_graph.bfs("Somebody")
         big_graph.bfs("Martin Kampmann", "Nobody")
+
+    with pytest.raises(TypeError, match=r'Argument "end" must be a string or "None"'):
+        big_graph.bfs([])
 
     # test mini erdos-renyi graph, see erdosrenyi.png for image
     # path lengths found by inspection
